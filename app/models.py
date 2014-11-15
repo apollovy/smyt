@@ -44,9 +44,6 @@ def _get_model_name(_str):
     return _str.capitalize()
 
 
-__all__ = [_get_model_name(model_name) for model_name in LOADED_YAML]
-
-
 for model_name, params in LOADED_YAML.iteritems():
     class_name = _get_model_name(model_name)
     setattr(
@@ -78,3 +75,9 @@ for model_name, params in LOADED_YAML.iteritems():
             )
         ),
     )
+
+models = [
+    getattr(__module__, model_name) for model_name in [
+        _get_model_name(model_name) for model_name in LOADED_YAML
+    ]
+]
