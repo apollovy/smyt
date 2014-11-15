@@ -33,12 +33,22 @@ FIELD_TYPES_MAPPING = {
 }
 
 
-for model_name, params in yaml.load(
+LOADED_YAML = yaml.load(
     file(
         os.path.join(os.path.dirname(__file__), 'models.yaml')
     ).read()
-).iteritems():
-    class_name = model_name.capitalize()
+)
+
+
+def _get_model_name(_str):
+    return _str.capitalize()
+
+
+__all__ = [_get_model_name(model_name) for model_name in LOADED_YAML]
+
+
+for model_name, params in LOADED_YAML.iteritems():
+    class_name = _get_model_name(model_name)
     setattr(
         __module__,
         class_name,
