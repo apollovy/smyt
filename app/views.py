@@ -65,7 +65,7 @@ for model in models.models:
             class_name,
             (viewsets.ModelViewSet, ),
             dict(
-                queryset=model.objects.all(),
+                model=model,
                 serializer_class=getattr(
                     serializers, serializers.get_serializer_name_by_model(
                         model
