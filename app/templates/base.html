@@ -1,0 +1,33 @@
+<!doctype html>{% spaceless %}
+{% load compress static %}
+<html ng-app="smytApp" lang="ru">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% compress css %}
+      <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+      <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap-theme.min.css' %}">
+    {% endcompress %}
+    <title>SMYT</title>
+  </head>
+  <body>
+    <div id="content_wrapper">
+      <div class="container">
+        {% block container %}
+        {% endblock container %}
+      </div>
+    </div>
+    <div class="script_wrapper">
+      {% compress js %}
+        <script>
+          var smyt = {};
+          smyt.models_path = "{% url 'models-list' %}";
+        </script>
+        <script src="{% static 'jquery/js/jquery-2.1.1.min.js' %}"></script>
+        <script src="{% static 'angular/js/angular.min.js' %}"></script>
+        <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+        <script src="{% static 'app/js/angular.config.js' %}"></script>
+        <script src="{% static 'app/js/controllers.js' %}"></script>
+      {% endcompress %}
+    </div>
+  </body>
+{% endspaceless %}</html>

@@ -26,6 +26,8 @@ for model in models.models:
 
 urlpatterns = patterns(
     '',
-    url(r'^', include(router.urls)),
+    url(r'^$', views.IndexView.as_view(), name='index'),  # noqa
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^models/$', views.models_json, name='models-list'),
+    url(r'^', include(router.urls)),
 )

@@ -1,0 +1,22 @@
+{% extends 'app/base.html' %}
+
+{% block container %}
+  <div ng-controller="ModelListController" class="row">
+    <div class="col-md-offset-2 col-md-2">
+      <div class="list-group">
+        <ul class="list-group">
+            <li class="list-group-item" ng-repeat="model in models">
+            <a href="#/{$ model.name $}/">{$ model.title $}</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div id="/{$ model.name $}/" class="panel panel-default" ng-repeat="model in models">
+        <div class="panel-heading">{$ model.title $}</div>
+        <table class="table">
+        </table>
+      </div>
+    </div>
+  </div>
+{% endblock container %}
