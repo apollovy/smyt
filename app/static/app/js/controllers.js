@@ -3,7 +3,8 @@ smytApp.factory(
   [
     '$http',
     '$rootScope',
-    function ($http, $rootScope) {
+    '$resource',
+    function ($http, $rootScope, $resource) {
       var ModelsService = {
         models: null,
         current_model: null,
@@ -13,7 +14,7 @@ smytApp.factory(
         },
         objects: null,
         get_objects_for: function (model) {
-          $http.get(model.url).success(
+          model.__class__.query().$promise.then(
             function (data) {
               ModelsService.objects = data;
               $rootScope.$broadcast('objects.update');
@@ -24,9 +25,14 @@ smytApp.factory(
       $http.get(smytApp.models_path).success(
         function(data) {
           ModelsService.models = data;
+          for (model_name in data) {
+            ModelsService.models[model_name].__class__ = $resource(
+              data[model_name].url
+            )
+          }
           $rootScope.$broadcast('models.update');
         }
-      )
+      );
       return ModelsService
     }
   ]
