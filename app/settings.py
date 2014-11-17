@@ -91,5 +91,25 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'static_files', 'media')
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ],
+    'DATE_INPUT_FORMATS': [
+        'iso-8601',
+        '%Y-%m-%dT%H:%M:%S.000Z',
     ]
+}
+LOGGING = {
+    'version': 1,
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django.request': {
+            'handlers': ['console'],
+            'propagate': True,
+            'level': 'DEBUG',
+        }
+    },
 }

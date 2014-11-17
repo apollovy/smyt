@@ -25,6 +25,9 @@
         <script src="{% static 'app/js/angular.config.js' %}"></script>
         <script>
           smytApp.models_path = "{% url 'models-list' %}";
+          smytApp.config(['$httpProvider', function($httpProvider) {
+            $httpProvider.defaults.headers.common['X-CSRFToken'] = '{{ csrf_token|escapejs }}';
+          }]);
         </script>
         <script src="{% static 'app/js/controllers.js' %}"></script>
       {% endcompress %}

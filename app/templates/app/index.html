@@ -10,20 +10,31 @@
         </li>
       </ul>
     </div>
-    <div ng-controller="ObjectsController" class="col-md-6">
+    <div ng-controller="ObjectsController" class="col-md-6" id="object_list">
       <h2>Объекты</h2>
-      <div id="/{$ current_model.name $}/" class="panel panel-default">
+      <div id="/{$ current_model.name $}/" class="panel panel-default" ng-show="current_model">
         <div class="panel-heading">{$ current_model.title $}</div>
-        <table class="table">
-          <tr>
-            <th ng-repeat="field in fields_for(current_model)">
-              {$ field.title $}
-            </th>
-          </tr>
-          <tr ng-repeat="object in objects">
-            <td ng-repeat="field in fields_for(current_model)">{$ object[field.id] $}</td>
-          </tr>
-        </table>
+        <form>
+          <table class="table">
+            <tr>
+              <th ng-repeat="field in fields_for(current_model)">
+                {$ field.title $}
+              </th>
+            </tr>
+            <tr ng-repeat="object in objects">
+              <td ng-repeat="field in fields_for(current_model)">{$ object[field.id] $}</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td ng-repeat="field in fields_for(current_model)">
+                <input name="{$ field.id $}" type="{$ input_types_mapping[field.type] $}" ng-model="new_object[field.id]">
+              </td>
+              <td>
+                <button type="submit" ng-click="new_object_save()">Создать</button>
+              </td>
+            </tr>
+          </table>
+        </form>
       </div>
     </div>
   </div>
