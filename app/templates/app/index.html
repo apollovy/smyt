@@ -1,27 +1,27 @@
 {% extends 'app/base.html' %}
 
 {% block container %}
-  <div ng-controller="ModelListController" class="row">
-    <div class="col-md-offset-2 col-md-2">
+  <div class="row">
+    <div ng-controller="ModelListController" class="col-md-offset-2 col-md-2" id="model_list">
       <h2>Модели</h2>
       <ul class="list-group">
         <li class="list-group-item" ng-repeat="model in models">
-          <a href="#/{$ model.name $}/">{$ model.title $}</a>
+          <a href="#/{$ model.name $}/" ng-click="show_objects_of(model)">{$ model.title $}</a>
         </li>
       </ul>
     </div>
-    <div class="col-md-6">
+    <div ng-controller="ObjectsController" class="col-md-6">
       <h2>Объекты</h2>
-      <div id="/{$ model.name $}/" class="panel panel-default" ng-repeat="model in models">
-        <div class="panel-heading">{$ model.title $}</div>
+      <div id="/{$ current_model.name $}/" class="panel panel-default">
+        <div class="panel-heading">{$ current_model.title $}</div>
         <table class="table">
           <tr>
-            <th ng-repeat="field in fields_for(model)">
+            <th ng-repeat="field in fields_for(current_model)">
               {$ field.title $}
             </th>
           </tr>
-          <tr ng-repeat="object in models[model.name].objects">
-            <td ng-repeat="field in fields_for(model)">{$ object[field.id] $}</td>
+          <tr ng-repeat="object in objects">
+            <td ng-repeat="field in fields_for(current_model)">{$ object[field.id] $}</td>
           </tr>
         </table>
       </div>
