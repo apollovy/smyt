@@ -24,7 +24,7 @@ smytApp.factory(
         input_types_mapping: {
           char: "text",
           int: "number",
-          date: "date",
+          date: "text",
         }
       };
       $http.get(smytApp.models_path).success(
@@ -67,8 +67,9 @@ smytApp.factory(
   [
     '$scope',
     '$http',
+    '$resource',
     'ModelsService',
-    function ($scope, $http, ModelsService) {
+    function ($scope, $http, $resource, ModelsService) {
 
       $scope.objects = ModelsService.objects;
       $scope.$on(
@@ -90,6 +91,11 @@ smytApp.factory(
       $scope.fields_for = function (model) {
         return model ? ModelsService.models[model.name].fields : null
       };
+      var date_pattern = /\d{4}-\d{1,2}-\d{1,2}/,
+          any_pattern = /.*/
+      $scope.input_pattern_for = function (field) {
+        return field && ( field.type == 'date' ) ? date_pattern : any_pattern
+      }
 
       $scope.input_types_mapping = ModelsService.input_types_mapping;
 
@@ -98,18 +104,6 @@ smytApp.factory(
         $scope.new_object = new ModelsService.current_model.__class__;
       }
       $scope.new_object_save = function () {
-        for (field in $scope.new_object) {
-          if (
-              $scope.current_model[field] &&
-              $scope.current_model[field].type == 'date'
-          ) {
-            // A (very) strange case is that if you set date=2014-11-17,
-            // you'll get 2014-11-16 in request - guess there's TZ issues
-            // somewhere, cause it's 02:13GMT+3 and date_joined is sent
-            // 2014-11-16T21:00:00.000Z
-            $scope.new_object[field] = Date($scope.new_object[field]);
-          }
-        }
         $scope.new_object.$save(
           [], function () {
             $scope.objects.push($scope.new_object);
@@ -118,6 +112,30 @@ smytApp.factory(
             console.log(response);
           }
         )
+      }
+
+      $scope.edited_object = null;
+      $scope.edited_object_model = null;
+      $scope.edit_mode_enter = function (object) {
+        $scope.edited_object = object;
+        $scope.edited_object_model = $resource(
+          object.url,
+          null,
+          {
+            'update': { method: 'PUT' }
+          }
+        );
+      }
+      $scope.edited_object_save = function () {
+        var new_object = new $scope.edited_object_model;
+        $scope.edited_object_model.update(
+          $scope.edited_object, function () {
+            $scope.edited_object = null;
+            $scope.edited_object_model = null;
+          }, function (response) {
+            console.log(response);
+          }
+        );
       }
     }
   ]

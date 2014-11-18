@@ -14,27 +14,33 @@
       <h2>Объекты</h2>
       <div id="/{$ current_model.name $}/" class="panel panel-default" ng-show="current_model">
         <div class="panel-heading">{$ current_model.title $}</div>
-        <form>
           <table class="table">
             <tr>
               <th ng-repeat="field in fields_for(current_model)">
                 {$ field.title $}
               </th>
             </tr>
-            <tr ng-repeat="object in objects">
-              <td ng-repeat="field in fields_for(current_model)">{$ object[field.id] $}</td>
-              <td></td>
+            <tr ng-repeat="object in objects" ng-form>
+              <td ng-repeat="field in fields_for(current_model)" ng-click="edit_mode_enter(object)">
+                <div ng-show="edited_object !== object">{$ object[field.id] $}</div>
+                <div ng-show="edited_object === object">
+                  <input name="{$ field.id $}" type="{$ input_types_mapping[field.type] $}" ng-model="edited_object[field.id]" ng-pattern="input_pattern_for(field)" required="required">
+                </div>
+              </td>
+              <td ng-show="edited_object === object">
+                <button type="submit" ng-click="edited_object_save()">Сохранить</button>
+              </td>
             </tr>
-            <tr>
+            <tr ng-form>
               <td ng-repeat="field in fields_for(current_model)">
-                <input name="{$ field.id $}" type="{$ input_types_mapping[field.type] $}" ng-model="new_object[field.id]">
+                <input name="{$ field.id $}" type="{$ input_types_mapping[field.type] $}" ng-model="new_object[field.id]" ng-pattern="input_pattern_for(field)" required="reqiured">
               </td>
               <td>
                 <button type="submit" ng-click="new_object_save()">Создать</button>
               </td>
             </tr>
           </table>
-        </form>
+        </div>
       </div>
     </div>
   </div>
