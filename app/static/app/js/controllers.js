@@ -116,8 +116,10 @@ smytApp.factory(
 
       $scope.edited_object = null;
       $scope.edited_object_model = null;
+      $scope.edited_object_original = null;
       $scope.edit_mode_enter = function (object) {
-        $scope.edited_object = object;
+        $scope.edited_object = angular.copy(object);
+        $scope.edited_object_original = object;
         $scope.edited_object_model = $resource(
           object.url,
           null,
@@ -127,15 +129,31 @@ smytApp.factory(
         );
       }
       $scope.edited_object_save = function () {
-        var new_object = new $scope.edited_object_model;
         $scope.edited_object_model.update(
-          $scope.edited_object, function () {
-            $scope.edited_object = null;
-            $scope.edited_object_model = null;
-          }, function (response) {
+          $scope.edited_object,
+          function () {
+            for(var i=0; i<$scope.objects.length; ++i) {
+              var object = $scope.objects[i];
+              if ( object.url === $scope.edited_object.url ) {
+                $scope.objects[i] = $scope.edited_object;
+                break;
+              }
+            }
+            $scope.edited_object_reset();
+          },
+          function (response) {
             console.log(response);
           }
         );
+      }
+      $scope.edited_object_reset = function () {
+        $scope.edited_object = null;
+        $scope.edited_object_model = null;
+        $scope.edited_object_original = null;
+      }
+
+      $scope.get_md_column_width = function() {
+        return Math.floor(10/$scope.current_model.fields.length);
       }
     }
   ]
