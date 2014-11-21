@@ -102,6 +102,7 @@ smytApp.factory(
       $scope.new_object = null;
       $scope.new_object_reset = function () {
         $scope.new_object = new ModelsService.current_model.__class__;
+        $scope.new_object_form.$setPristine();
       }
       $scope.new_object_save = function () {
         $scope.new_object.$save(

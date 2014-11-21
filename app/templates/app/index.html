@@ -14,45 +14,43 @@
       <h2>Объекты</h2>
       <div id="/{$ current_model.name $}/" class="panel panel-default" ng-show="current_model">
         <div class="panel-heading">{$ current_model.title $}</div>
-          <div class="table">
-            <div class="row">
-              <div class="col-md-{$ get_md_column_width() $}" ng-repeat="field in fields_for(current_model)">
-                {$ field.title $}
-              </div>
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-md-{$ get_md_column_width() $}" ng-repeat="field in fields_for(current_model)">
+              {$ field.title $}
             </div>
-            <div class="row" ng-repeat="object in objects">
-              <form ng-if="edited_object_original === object" name="edited_object_form">
-                <div class="col-md-{$ get_md_column_width() $}" ng-repeat="field in fields_for(current_model)">
-                  <input name="{$ field.id $}" type="{$ input_types_mapping[field.type] $}" ng-model="edited_object[field.id]" ng-pattern="input_pattern_for(field)" required="required">
-                  <div ng-show="edited_object_form[field.id].$dirty && edited_object_form[field.id].$invalid" class="text-danger">Ошибка:
-                    <span ng-show="edited_object_form[field.id].$error.required">обязательное поле</span>
-                    <span ng-show="edited_object_form[field.id].$error.pattern">неверный формат данных</span>
-                    <span ng-show="edited_object_form[field.id].$error && ! edited_object_form[field.id].$error.required && ! edited_object_form[field.id].$error.pattern">неверный тип данных</span>
-                  </div>
+          </div>
+          <div class="row" ng-repeat="object in objects">
+            <form ng-if="edited_object_original === object" name="edited_object_form" role="form">
+              <div class="col-md-{$ get_md_column_width() $} form-group" ng-repeat="field in fields_for(current_model)">
+                <input name="{$ field.id $}" type="{$ input_types_mapping[field.type] $}" ng-model="edited_object[field.id]" ng-pattern="input_pattern_for(field)" required="required" class="form-control">
+                <div ng-show="edited_object_form[field.id].$dirty && edited_object_form[field.id].$invalid" class="text-danger">Ошибка:
+                  <span ng-show="edited_object_form[field.id].$error.required">обязательное поле</span>
+                  <span ng-show="edited_object_form[field.id].$error.pattern">неверный формат данных</span>
+                  <span ng-show="edited_object_form[field.id].$error && ! edited_object_form[field.id].$error.required && ! edited_object_form[field.id].$error.pattern">неверный тип данных</span>
                 </div>
-                <div class="col-md-2">
-                  <button class="btn btn-primary btn-xs glyphicon glyphicon-ok" ng-click="edited_object_save()" ng-disabled="edited_object_form.$invalid || edited_object_form.$pristine || edited_object == edited_object_original"></button>
-                  <button class="btn btn-primary btn-xs glyphicon glyphicon-remove" ng-click="edited_object_reset()" ng-disabled="edited_object_form.$pristine || edited_object == edited_object_original"></button>
-                </div>
-              </form>
-              <div class="col-md-{$ get_md_column_width() $}" ng-repeat="field in fields_for(current_model)">
-                <div ng-show="edited_object_original !== object" ng-click="edit_mode_enter(object)">{$ object[field.id] $}</div>
               </div>
               <div class="col-md-2">
+                <button class="btn btn-primary btn-xs glyphicon glyphicon-ok" ng-click="edited_object_save()" ng-disabled="edited_object_form.$invalid || edited_object_form.$pristine || edited_object == edited_object_original"></button>
+                <button class="btn btn-primary btn-xs glyphicon glyphicon-remove" ng-click="edited_object_reset()"></button>
+              </div>
+            </form>
+            <div class="col-md-{$ get_md_column_width() $} form-group" ng-repeat="field in fields_for(current_model)">
+              <div ng-show="edited_object_original !== object" ng-click="edit_mode_enter(object)" class="form-control">{$ object[field.id] $}</div>
+            </div>
+            <div class="col-md-2"></div>
+          </div>
+          <div class="row" ng-form name="new_object_form">
+            <div class="col-md-{$ get_md_column_width() $} form-group" ng-repeat="field in fields_for(current_model)">
+              <input name="{$ field.id $}" type="{$ input_types_mapping[field.type] $}" ng-model="new_object[field.id]" ng-pattern="input_pattern_for(field)" required="reqiured" class="form-control">
+              <div ng-show="new_object_form[field.id].$dirty && new_object_form[field.id].$invalid" class="text-danger">Ошибка:
+                <span ng-show="new_object_form[field.id].$error.required">обязательное поле</span>
+                <span ng-show="new_object_form[field.id].$error.pattern">неверный формат данных</span>
+                <span ng-show="new_object_form[field.id].$error && ! new_object_form[field.id].$error.required && ! new_object_form[field.id].$error.pattern">неверный тип данных</span>
               </div>
             </div>
-            <div class="row" ng-form name="new_object_form">
-              <div class="col-md-{$ get_md_column_width() $}" ng-repeat="field in fields_for(current_model)">
-                <input name="{$ field.id $}" type="{$ input_types_mapping[field.type] $}" ng-model="new_object[field.id]" ng-pattern="input_pattern_for(field)" required="reqiured">
-                <div ng-show="new_object_form[field.id].$dirty && new_object_form[field.id].$invalid" class="text-danger">Ошибка:
-                  <span ng-show="new_object_form[field.id].$error.required">обязательное поле</span>
-                  <span ng-show="new_object_form[field.id].$error.pattern">неверный формат данных</span>
-                  <span ng-show="new_object_form[field.id].$error && ! new_object_form[field.id].$error.required && ! new_object_form[field.id].$error.pattern">неверный тип данных</span>
-                </div>
-              </div>
-              <div class="col">
-                <button class="btn btn-primary btn-xs glyphicon glyphicon-ok" ng-click="new_object_save()" ng-disabled="new_object_form.$invalid"></button>
-              </div>
+            <div class="col-md-2">
+              <button class="btn btn-primary btn-xs glyphicon glyphicon-ok" ng-click="new_object_save()" ng-disabled="new_object_form.$invalid"></button>
             </div>
           </div>
         </div>
